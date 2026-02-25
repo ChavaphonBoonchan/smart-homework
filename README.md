@@ -153,31 +153,75 @@ npx expo start
 > ⚠️ **สำคัญ:** มือถือและคอมพิวเตอร์ต้องต่อ **Wi-Fi วงเดียวกัน**
 
 **Android:**
-1. เปิดแอป **Expo Go** บนมือถือ
-2. กดปุ่ม **"Scan QR code"**
-3. สแกน QR Code ที่ปรากฏใน Terminal
-4. แอปจะโหลดขึ้นมาบนมือถือโดยอัตโนมัติ 🎉
+1. เปิด [Google Play Store](https://play.google.com/store/apps/details?id=host.exp.exponent)
+2. ค้นหา **"Expo Go"** แล้วติดตั้ง
 
-**iOS (iPhone):**
-1. เปิด **กล้อง (Camera)** ในตัว (ไม่ต้องเปิด Expo Go)
-2. ส่องกล้องไปที่ QR Code
-3. กดลิงก์ที่แจ้งเตือนขึ้นมาด้านบนหน้าจอ
-4. แอปจะเปิดขึ้นใน Expo Go โดยอัตโนมัติ 🎉
+**iOS:**
+1. เปิด [App Store](https://apps.apple.com/app/expo-go/id982107779)
+2. ค้นหา **"Expo Go"** แล้วติดตั้ง
 
----
+### ขั้นตอนเปิดแอป
 
-### 🔧 ถ้า QR Code ใช้ไม่ได้ (Wi-Fi คนละวง)
+1. รัน `npx expo start` บนคอมพิวเตอร์
+2. Terminal จะแสดง **QR Code** และ URL เช่น `exp://192.168.x.x:8081`
+3. **Android:** เปิดแอป Expo Go → กด **"Scan QR code"** → สแกน QR Code
+4. **iOS:** เปิด **กล้อง (Camera)** ในตัว → สแกน QR Code → กดลิงก์ที่แจ้งเตือน
+5. แอปจะ build และแสดงผลบนมือถือโดยอัตโนมัติ
 
-ให้ใช้โหมด tunnel แทน:
+> ⚠️ **หมายเหตุ:** มือถือและคอมพิวเตอร์ต้องต่อ **Wi-Fi เดียวกัน**
+
+### ตัวเลือกเพิ่มเติม
 
 ```bash
-npx expo start --tunnel
+npx expo start --android   # เปิดบน Android Emulator
+npx expo start --ios       # เปิดบน iOS Simulator (macOS เท่านั้น)
+npx expo start --tunnel    # ใช้ tunnel ถ้า Wi-Fi ต่างกัน
 ```
-
-โหมดนี้จะทำงานผ่านอินเทอร์เน็ต ไม่ต้องต่อ Wi-Fi เดียวกัน
 
 ---
 
+## 🐙 วิธีเตรียมขึ้น GitHub
+
+### 1. สร้าง Repository บน GitHub
+
+1. ไปที่ [github.com/new](https://github.com/new)
+2. ตั้งชื่อ Repository: `smart-homework`
+3. เลือก **Public** หรือ **Private**
+4. **ไม่ต้อง** เลือก Initialize README (เรามีแล้ว)
+5. กด **Create repository**
+
+### 2. Init Git และ Push ครั้งแรก
+
+```bash
+git init
+git add .
+git commit -m "Initial commit: Smart Homework app"
+git branch -M main
+git remote add origin https://github.com/<your-username>/smart-homework.git
+git push -u origin main
+```
+
+### 3. Push ครั้งถัดไป
+
+```bash
+git add .
+git commit -m "your commit message"
+git push
+```
+
+### ⚠️ ไฟล์ที่ถูก Ignore (ไม่ขึ้น Git)
+
+ไฟล์เหล่านี้ถูก exclude โดย `.gitignore` แล้ว:
+
+| ไฟล์/โฟลเดอร์ | เหตุผล |
+|--------------|--------|
+| `node_modules/` | ติดตั้งใหม่ได้จาก `package.json` |
+| `.env` | มี secret / ข้อมูลส่วนตัว |
+| `.expo/` | Cache ของ Expo CLI |
+| `/ios`, `/android` | Generate ใหม่ได้จาก `expo prebuild` |
+| `/generated/prisma` | Generate ใหม่ได้จาก `prisma generate` |
+
+---
 
 ## 🔔 การตั้งค่า Notification (Android)
 
