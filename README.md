@@ -180,49 +180,6 @@ npx expo start --tunnel    # ใช้ tunnel ถ้า Wi-Fi ต่างกั
 
 ---
 
-## 🐙 วิธีเตรียมขึ้น GitHub
-
-### 1. สร้าง Repository บน GitHub
-
-1. ไปที่ [github.com/new](https://github.com/new)
-2. ตั้งชื่อ Repository: `smart-homework`
-3. เลือก **Public** หรือ **Private**
-4. **ไม่ต้อง** เลือก Initialize README (เรามีแล้ว)
-5. กด **Create repository**
-
-### 2. Init Git และ Push ครั้งแรก
-
-```bash
-git init
-git add .
-git commit -m "Initial commit: Smart Homework app"
-git branch -M main
-git remote add origin https://github.com/<your-username>/smart-homework.git
-git push -u origin main
-```
-
-### 3. Push ครั้งถัดไป
-
-```bash
-git add .
-git commit -m "your commit message"
-git push
-```
-
-### ⚠️ ไฟล์ที่ถูก Ignore (ไม่ขึ้น Git)
-
-ไฟล์เหล่านี้ถูก exclude โดย `.gitignore` แล้ว:
-
-| ไฟล์/โฟลเดอร์ | เหตุผล |
-|--------------|--------|
-| `node_modules/` | ติดตั้งใหม่ได้จาก `package.json` |
-| `.env` | มี secret / ข้อมูลส่วนตัว |
-| `.expo/` | Cache ของ Expo CLI |
-| `/ios`, `/android` | Generate ใหม่ได้จาก `expo prebuild` |
-| `/generated/prisma` | Generate ใหม่ได้จาก `prisma generate` |
-
----
-
 ## 🔔 การตั้งค่า Notification (Android)
 
 แอปจะขอสิทธิ์แจ้งเตือนเมื่อเปิดครั้งแรก กด **Allow** เพื่อรับการแจ้งเตือน
