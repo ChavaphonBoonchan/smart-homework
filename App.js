@@ -24,6 +24,7 @@ import {
 import {
   requestNotificationPermissions,
   scheduleReminder,
+  rescheduleAllReminders,
 } from './src/notifications';
 
 // ─── Color Palette (Blue Theme) ───
@@ -294,14 +295,20 @@ export default function App() {
     try {
       const data = await getAllHomework();
       setHomeworkList(data);
+      return data;
     } catch (e) {
       console.error('Failed to load homework:', e);
+      return [];
     }
   }, []);
 
   useEffect(() => {
-    loadData();
-    requestNotificationPermissions();
+    const init = async () => {
+      await requestNotificationPermissions();
+      const data = await loadData();
+      await rescheduleAllReminders(data);
+    };
+    init();
   }, [loadData]);
 
   const resetForm = () => {

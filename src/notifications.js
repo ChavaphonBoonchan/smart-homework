@@ -68,8 +68,9 @@ export async function scheduleReminder(homeworkId, subject, dueDate) {
         ...(Platform.OS === 'android' && { channelId: 'homework' }),
       },
       trigger: {
-        type: 'date',
-        date: reminderDate,
+        type: 'timeInterval',
+        seconds: secondsUntilReminder,
+        channelId: 'homework',
       },
     });
 
@@ -85,4 +86,14 @@ export async function cancelReminder(identifier) {
   if (identifier) {
     await Notifications.cancelScheduledNotificationAsync(identifier);
   }
+}
+
+export async function rescheduleAllReminders(homeworkList) {
+  await Notifications.cancelAllScheduledNotificationsAsync();
+  for (const item of homeworkList) {
+    if (!item.isCompleted && item.dueDate) {
+      await scheduleReminder(item.id, item.subject, item.dueDate);
+    }
+  }
+  console.log('Re-scheduled all pending notifications');
 }
