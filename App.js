@@ -24,7 +24,6 @@ import {
 import {
   requestNotificationPermissions,
   scheduleReminder,
-  scheduleTestNotification,
 } from './src/notifications';
 
 // ─── Color Palette (Blue Theme) ───
@@ -346,6 +345,9 @@ export default function App() {
           priority,
           reminder
         );
+        if (reminder) {
+          await scheduleReminder(editingItem.id, subject.trim(), dueDate);
+        }
       } else {
         const newId = await addHomework(
           subject.trim(),
@@ -416,33 +418,6 @@ export default function App() {
           {/* ─── Add Button ─── */}
           <TouchableOpacity style={s.addButton} onPress={openAddModal} activeOpacity={0.8}>
             <Text style={s.addButtonText}>＋ เพิ่มงานใหม่</Text>
-          </TouchableOpacity>
-
-          {/* ─── Test Notification Button ─── */}
-          <TouchableOpacity 
-            style={s.testButton} 
-            onPress={async () => {
-              const hasPermission = await requestNotificationPermissions();
-              if (!hasPermission) {
-                Alert.alert(
-                  '⚠️ ไม่มีสิทธิ์แจ้งเตือน', 
-                  'กรุณาเปิดการอนุญาตการแจ้งเตือนในการตั้งค่าของแอป'
-                );
-                return;
-              }
-              const id = await scheduleTestNotification();
-              if (id) {
-                Alert.alert(
-                  '✅ กำหนดการแจ้งเตือนแล้ว', 
-                  'จะมีการแจ้งเตือนภายใน 10 วินาที\n\nหากไม่มีการแจ้งเตือน ให้ตรวจสอบ:\n• การตั้งค่าการแจ้งเตือนของแอป\n• Battery optimization (ปิด)\n• Do Not Disturb mode (ปิด)'
-                );
-              } else {
-                Alert.alert('❌ เกิดข้อผิดพลาด', 'ไม่สามารถกำหนดการแจ้งเตือนได้');
-              }
-            }} 
-            activeOpacity={0.8}
-          >
-            <Text style={s.testButtonText}>🔔 ทดสอบการแจ้งเตือน (10 วินาที)</Text>
           </TouchableOpacity>
 
           {/* ─── Status Bar ─── */}
@@ -646,26 +621,6 @@ const s = StyleSheet.create({
   addButtonText: {
     fontSize: 17,
     fontWeight: '700',
-    color: COLORS.white,
-  },
-
-  // Test Button
-  testButton: {
-    marginHorizontal: 20,
-    marginTop: 10,
-    paddingVertical: 12,
-    backgroundColor: COLORS.warning,
-    borderRadius: 14,
-    alignItems: 'center',
-    shadowColor: COLORS.shadow,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3,
-  },
-  testButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
     color: COLORS.white,
   },
 

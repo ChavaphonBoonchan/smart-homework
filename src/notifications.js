@@ -53,6 +53,7 @@ export async function scheduleReminder(homeworkId, subject, dueDate) {
   const reminderDate = new Date(dueDateObj.getTime() - 24 * 60 * 60 * 1000);
 
   if (reminderDate <= new Date()) {
+    console.log('Reminder date is in the past, skipping notification');
     return null;
   }
 
@@ -64,35 +65,17 @@ export async function scheduleReminder(homeworkId, subject, dueDate) {
         data: { homeworkId },
         ...(Platform.OS === 'android' && { channelId: 'homework' }),
       },
-      trigger: reminderDate,
+      trigger: {
+        type: 'date',
+        date: reminderDate,
+        channelId: 'homework',
+      },
     });
 
-    console.log('Notification scheduled:', identifier, 'for', reminderDate);
+    console.log('Notification scheduled:', identifier, 'for', reminderDate.toLocaleString('th-TH'));
     return identifier;
   } catch (error) {
     console.error('Failed to schedule notification:', error);
-    return null;
-  }
-}
-
-export async function scheduleTestNotification() {
-  try {
-    const testDate = new Date(Date.now() + 10 * 1000);
-    
-    const identifier = await Notifications.scheduleNotificationAsync({
-      content: {
-        title: '🔔 ทดสอบการแจ้งเตือน',
-        body: 'ถ้าเห็นข้อความนี้แสดงว่าระบบแจ้งเตือนทำงานได้!',
-        data: { test: true },
-        ...(Platform.OS === 'android' && { channelId: 'homework' }),
-      },
-      trigger: testDate,
-    });
-
-    console.log('Test notification scheduled for 10 seconds from now');
-    return identifier;
-  } catch (error) {
-    console.error('Failed to schedule test notification:', error);
     return null;
   }
 }
