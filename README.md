@@ -4,7 +4,7 @@
 
 ## 📥 ดาวน์โหลด APK
 
-[![Download APK](https://img.shields.io/badge/Download-APK%20v1.0.0-blue?style=for-the-badge&logo=android)](https://github.com/ChavaphonBoonchan/smart-homework/releases/download/v1.0.0/smart-homework-v1.0.0.apk)
+[![Download APK](https://img.shields.io/badge/Download-APK%20v1.0.0-blue?style=for-the-badge&logo=android)](https://github.com/ChavaphonBoonchan/smart-homework/releases/download/app/application-a904ab75-ebf0-4ea1-86d6-9e529e3cbb4f.apk)
 
 **วิธีติดตั้ง:**
 1. คลิกปุ่มด้านบนเพื่อดาวน์โหลด APK
