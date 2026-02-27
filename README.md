@@ -2,6 +2,20 @@
 
 แอปจัดการการบ้านบนมือถือ สร้างด้วย React Native + Expo SDK 54
 
+## 📥 ดาวน์โหลด APK
+
+[![Download APK](https://img.shields.io/badge/Download-APK%20v1.0.0-blue?style=for-the-badge&logo=android)](https://github.com/ChavaphonBoonchan/smart-homework/releases/download/v1.0.0/smart-homework-v1.0.0.apk)
+
+**วิธีติดตั้ง:**
+1. คลิกปุ่มด้านบนเพื่อดาวน์โหลด APK
+2. เปิดไฟล์ APK บนมือถือ Android
+3. อนุญาตการติดตั้งจากแหล่งที่ไม่รู้จัก (ถ้าถาม)
+4. ติดตั้งและเปิดใช้งาน
+
+> **หมายเหตุ:** รองรับ Android 7.0 (API 24) ขึ้นไป
+
+---
+
 ## ✨ ฟีเจอร์หลัก
 
 - **เพิ่ม/แก้ไข/ลบ** งานการบ้านได้อย่างง่ายดาย
