@@ -245,7 +245,7 @@ function HomeworkCard({ item, onToggle, onEdit, onDelete }) {
             </Text>
           )}
           {item.reminder ? (
-            <Text style={s.cardReminder}>🔔 แจ้งเตือนล่วงหน้า 1 วัน</Text>
+            <Text style={s.cardReminder}>🔔 แจ้งเตือนล่วงหน้า 1 นาที</Text>
           ) : null}
         </View>
 
@@ -289,7 +289,6 @@ export default function App() {
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState(new Date().toISOString());
   const [priority, setPriority] = useState(3);
-  const [reminder, setReminder] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -310,7 +309,6 @@ export default function App() {
     setDescription('');
     setDueDate(new Date().toISOString());
     setPriority(3);
-    setReminder(false);
     setEditingItem(null);
   };
 
@@ -325,7 +323,6 @@ export default function App() {
     setDescription(item.description);
     setDueDate(item.dueDate);
     setPriority(item.priority);
-    setReminder(!!item.reminder);
     setModalVisible(true);
   };
 
@@ -343,22 +340,18 @@ export default function App() {
           description.trim(),
           dueDate,
           priority,
-          reminder
+          true
         );
-        if (reminder) {
-          await scheduleReminder(editingItem.id, subject.trim(), dueDate);
-        }
+        await scheduleReminder(editingItem.id, subject.trim(), dueDate);
       } else {
         const newId = await addHomework(
           subject.trim(),
           description.trim(),
           dueDate,
           priority,
-          reminder
+          true
         );
-        if (reminder) {
-          await scheduleReminder(newId, subject.trim(), dueDate);
-        }
+        await scheduleReminder(newId, subject.trim(), dueDate);
       }
       setModalVisible(false);
       resetForm();
@@ -519,30 +512,18 @@ export default function App() {
                   {/* Priority */}
                   <PrioritySelector value={priority} onChange={setPriority} />
 
-                  {/* Reminder Toggle */}
-                  <TouchableOpacity
-                    style={[s.reminderToggle, reminder && s.reminderToggleActive]}
-                    onPress={() => setReminder(!reminder)}
-                  >
-                    <Text style={s.reminderIcon}>{reminder ? '🔔' : '🔕'}</Text>
+                  {/* Reminder Info (Always Enabled) */}
+                  <View style={s.reminderInfo}>
+                    <Text style={s.reminderIcon}>🔔</Text>
                     <View style={s.reminderTextContainer}>
-                      <Text
-                        style={[s.reminderText, reminder && s.reminderTextActive]}
-                      >
-                        แจ้งเตือนล่วงหน้า 1 วัน
+                      <Text style={s.reminderInfoText}>
+                        แจ้งเตือนล่วงหน้า 1 นาที
                       </Text>
-                      <Text style={s.reminderSubtext}>
-                        {reminder ? 'เปิดการแจ้งเตือน' : 'ปิดการแจ้งเตือน'}
+                      <Text style={s.reminderInfoSubtext}>
+                        เปิดการแจ้งเตือนอัตโนมัติทุกงาน
                       </Text>
                     </View>
-                    <View
-                      style={[s.toggleTrack, reminder && s.toggleTrackActive]}
-                    >
-                      <View
-                        style={[s.toggleThumb, reminder && s.toggleThumbActive]}
-                      />
-                    </View>
-                  </TouchableOpacity>
+                  </View>
 
                   {/* Save Button */}
                   <TouchableOpacity
@@ -908,21 +889,18 @@ const s = StyleSheet.create({
     marginTop: 6,
   },
 
-  // Reminder
-  reminderToggle: {
+  // Reminder Info (Always Enabled)
+  reminderInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#F1F5F9',
     borderWidth: 1.5,
-    borderColor: COLORS.border,
+    borderColor: '#CBD5E1',
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 14,
     marginTop: 16,
-  },
-  reminderToggleActive: {
-    borderColor: COLORS.primaryLight,
-    backgroundColor: COLORS.primaryLight + '08',
+    opacity: 0.7,
   },
   reminderIcon: {
     fontSize: 24,
@@ -931,43 +909,15 @@ const s = StyleSheet.create({
   reminderTextContainer: {
     flex: 1,
   },
-  reminderText: {
+  reminderInfoText: {
     fontSize: 15,
     fontWeight: '600',
-    color: COLORS.textPrimary,
+    color: '#64748B',
   },
-  reminderTextActive: {
-    color: COLORS.primary,
-  },
-  reminderSubtext: {
+  reminderInfoSubtext: {
     fontSize: 12,
-    color: COLORS.textLight,
+    color: '#94A3B8',
     marginTop: 2,
-  },
-  toggleTrack: {
-    width: 44,
-    height: 26,
-    borderRadius: 13,
-    backgroundColor: '#CBD5E1',
-    justifyContent: 'center',
-    paddingHorizontal: 3,
-  },
-  toggleTrackActive: {
-    backgroundColor: COLORS.primaryLight,
-  },
-  toggleThumb: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: COLORS.white,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.15,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  toggleThumbActive: {
-    alignSelf: 'flex-end',
   },
 
   // Save Button
