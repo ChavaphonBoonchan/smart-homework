@@ -333,29 +333,25 @@ export default function App() {
     }
 
     try {
+      let notifId = null;
       if (editingItem) {
-        await updateHomework(
-          editingItem.id,
-          subject.trim(),
-          description.trim(),
-          dueDate,
-          priority,
-          true
-        );
-        await scheduleReminder(editingItem.id, subject.trim(), dueDate);
+        await updateHomework(editingItem.id, subject.trim(), description.trim(), dueDate, priority, true);
+        notifId = await scheduleReminder(editingItem.id, subject.trim(), dueDate);
       } else {
-        const newId = await addHomework(
-          subject.trim(),
-          description.trim(),
-          dueDate,
-          priority,
-          true
-        );
-        await scheduleReminder(newId, subject.trim(), dueDate);
+        const newId = await addHomework(subject.trim(), description.trim(), dueDate, priority, true);
+        notifId = await scheduleReminder(newId, subject.trim(), dueDate);
       }
       setModalVisible(false);
       resetForm();
       await loadData();
+      const dueDateObj = new Date(dueDate);
+      const reminderTime = new Date(dueDateObj.getTime() - 24 * 60 * 60 * 1000);
+      const secondsLeft = Math.floor((reminderTime.getTime() - Date.now()) / 1000);
+      if (notifId) {
+        Alert.alert('✅ บันทึกสำเร็จ', `กำหนดแจ้งเตือนแล้ว\nID: ${notifId}\nอีก ${Math.floor(secondsLeft/3600)} ชั่วโมง ${Math.floor((secondsLeft%3600)/60)} นาที`);
+      } else {
+        Alert.alert('✅ บันทึกสำเร็จ', `ไม่ได้กำหนดการแจ้งเตือน\n(เวลาน้อยกว่า 1 วัน หรือเกิดข้อผิดพลาด)`);
+      }
     } catch (e) {
       console.error('Save error:', e);
       Alert.alert('❌ เกิดข้อผิดพลาด', 'ไม่สามารถบันทึกข้อมูลได้');

@@ -64,12 +64,12 @@ export async function scheduleReminder(homeworkId, subject, dueDate) {
         title: '📚 Smart Homework Reminder',
         body: `วิชา "${subject}" ต้องส่งภายในพรุ่งนี้!`,
         data: { homeworkId },
+        sound: 'default',
         ...(Platform.OS === 'android' && { channelId: 'homework' }),
       },
       trigger: {
-        type: 'timeInterval',
-        seconds: secondsUntilReminder,
-        channelId: 'homework',
+        type: 'date',
+        date: reminderDate,
       },
     });
 
