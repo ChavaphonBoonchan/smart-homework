@@ -10,28 +10,42 @@ Notifications.setNotificationHandler({
 });
 
 export async function requestNotificationPermissions() {
-  const { status: existingStatus } = await Notifications.getPermissionsAsync();
-  let finalStatus = existingStatus;
+  try {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
 
-  if (existingStatus !== 'granted') {
-    const { status } = await Notifications.requestPermissionsAsync();
-    finalStatus = status;
-  }
+    console.log('Current notification permission status:', existingStatus);
 
-  if (finalStatus !== 'granted') {
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+      console.log('New notification permission status:', status);
+    }
+
+    if (finalStatus !== 'granted') {
+      console.warn('Notification permission not granted');
+      return false;
+    }
+
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('homework', {
+        name: 'Homework Reminders',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#3B82F6',
+        sound: 'default',
+        enableLights: true,
+        enableVibrate: true,
+      });
+      console.log('Android notification channel created');
+    }
+
+    console.log('Notification permissions granted successfully');
+    return true;
+  } catch (error) {
+    console.error('Error requesting notification permissions:', error);
     return false;
   }
-
-  if (Platform.OS === 'android') {
-    await Notifications.setNotificationChannelAsync('homework', {
-      name: 'Homework Reminders',
-      importance: Notifications.AndroidImportance.HIGH,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#3B82F6',
-    });
-  }
-
-  return true;
 }
 
 export async function scheduleReminder(homeworkId, subject, dueDate) {

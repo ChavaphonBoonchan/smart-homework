@@ -422,8 +422,23 @@ export default function App() {
           <TouchableOpacity 
             style={s.testButton} 
             onPress={async () => {
-              await scheduleTestNotification();
-              Alert.alert('ทดสอบการแจ้งเตือน', 'จะมีการแจ้งเตือนภายใน 10 วินาที กรุณารอสักครู่');
+              const hasPermission = await requestNotificationPermissions();
+              if (!hasPermission) {
+                Alert.alert(
+                  '⚠️ ไม่มีสิทธิ์แจ้งเตือน', 
+                  'กรุณาเปิดการอนุญาตการแจ้งเตือนในการตั้งค่าของแอป'
+                );
+                return;
+              }
+              const id = await scheduleTestNotification();
+              if (id) {
+                Alert.alert(
+                  '✅ กำหนดการแจ้งเตือนแล้ว', 
+                  'จะมีการแจ้งเตือนภายใน 10 วินาที\n\nหากไม่มีการแจ้งเตือน ให้ตรวจสอบ:\n• การตั้งค่าการแจ้งเตือนของแอป\n• Battery optimization (ปิด)\n• Do Not Disturb mode (ปิด)'
+                );
+              } else {
+                Alert.alert('❌ เกิดข้อผิดพลาด', 'ไม่สามารถกำหนดการแจ้งเตือนได้');
+              }
             }} 
             activeOpacity={0.8}
           >
