@@ -24,6 +24,7 @@ import {
 import {
   requestNotificationPermissions,
   scheduleReminder,
+  scheduleTestNotification,
 } from './src/notifications';
 
 // ─── Color Palette (Blue Theme) ───
@@ -417,6 +418,18 @@ export default function App() {
             <Text style={s.addButtonText}>＋ เพิ่มงานใหม่</Text>
           </TouchableOpacity>
 
+          {/* ─── Test Notification Button ─── */}
+          <TouchableOpacity 
+            style={s.testButton} 
+            onPress={async () => {
+              await scheduleTestNotification();
+              Alert.alert('ทดสอบการแจ้งเตือน', 'จะมีการแจ้งเตือนภายใน 10 วินาที กรุณารอสักครู่');
+            }} 
+            activeOpacity={0.8}
+          >
+            <Text style={s.testButtonText}>🔔 ทดสอบการแจ้งเตือน (10 วินาที)</Text>
+          </TouchableOpacity>
+
           {/* ─── Status Bar ─── */}
           <View style={s.statusContainer}>
             <View style={s.statusRow}>
@@ -618,6 +631,26 @@ const s = StyleSheet.create({
   addButtonText: {
     fontSize: 17,
     fontWeight: '700',
+    color: COLORS.white,
+  },
+
+  // Test Button
+  testButton: {
+    marginHorizontal: 20,
+    marginTop: 10,
+    paddingVertical: 12,
+    backgroundColor: COLORS.warning,
+    borderRadius: 14,
+    alignItems: 'center',
+    shadowColor: COLORS.shadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  testButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
     color: COLORS.white,
   },
 

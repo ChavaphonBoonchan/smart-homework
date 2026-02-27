@@ -42,20 +42,45 @@ export async function scheduleReminder(homeworkId, subject, dueDate) {
     return null;
   }
 
-  const identifier = await Notifications.scheduleNotificationAsync({
-    content: {
-      title: '📚 Smart Homework Reminder',
-      body: `วิชา "${subject}" ต้องส่งภายในพรุ่งนี้!`,
-      data: { homeworkId },
-      ...(Platform.OS === 'android' && { channelId: 'homework' }),
-    },
-    trigger: {
-      type: 'date',
-      date: reminderDate,
-    },
-  });
+  try {
+    const identifier = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: '📚 Smart Homework Reminder',
+        body: `วิชา "${subject}" ต้องส่งภายในพรุ่งนี้!`,
+        data: { homeworkId },
+        ...(Platform.OS === 'android' && { channelId: 'homework' }),
+      },
+      trigger: reminderDate,
+    });
 
-  return identifier;
+    console.log('Notification scheduled:', identifier, 'for', reminderDate);
+    return identifier;
+  } catch (error) {
+    console.error('Failed to schedule notification:', error);
+    return null;
+  }
+}
+
+export async function scheduleTestNotification() {
+  try {
+    const testDate = new Date(Date.now() + 10 * 1000);
+    
+    const identifier = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: '🔔 ทดสอบการแจ้งเตือน',
+        body: 'ถ้าเห็นข้อความนี้แสดงว่าระบบแจ้งเตือนทำงานได้!',
+        data: { test: true },
+        ...(Platform.OS === 'android' && { channelId: 'homework' }),
+      },
+      trigger: testDate,
+    });
+
+    console.log('Test notification scheduled for 10 seconds from now');
+    return identifier;
+  } catch (error) {
+    console.error('Failed to schedule test notification:', error);
+    return null;
+  }
 }
 
 export async function cancelReminder(identifier) {
