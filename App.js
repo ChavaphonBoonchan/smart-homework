@@ -245,7 +245,7 @@ function HomeworkCard({ item, onToggle, onEdit, onDelete }) {
             </Text>
           )}
           {item.reminder ? (
-            <Text style={s.cardReminder}>🔔 แจ้งเตือนล่วงหน้า 1 นาที</Text>
+            <Text style={s.cardReminder}>🔔 แจ้งเตือนล่วงหน้า 1 วัน</Text>
           ) : null}
         </View>
 
@@ -512,18 +512,22 @@ export default function App() {
                   {/* Priority */}
                   <PrioritySelector value={priority} onChange={setPriority} />
 
-                  {/* Reminder Info (Always Enabled) */}
-                  <View style={s.reminderInfo}>
+                  {/* Reminder Toggle (Disabled) */}
+                  <View style={s.reminderToggle}>
                     <Text style={s.reminderIcon}>🔔</Text>
                     <View style={s.reminderTextContainer}>
-                      <Text style={s.reminderInfoText}>
-                        แจ้งเตือนล่วงหน้า 1 นาที
-                      </Text>
-                      <Text style={s.reminderInfoSubtext}>
-                        เปิดการแจ้งเตือนอัตโนมัติทุกงาน
-                      </Text>
+                      <Text style={s.reminderText}>แจ้งเตือนล่วงหน้า 1 วัน</Text>
+                      <Text style={s.reminderSubtext}>เปิดการแจ้งเตือนอัตโนมัติทุกงาน</Text>
+                    </View>
+                    <View style={s.toggleTrack}>
+                      <View style={s.toggleThumbActive} />
                     </View>
                   </View>
+                  {new Date(dueDate).getTime() - Date.now() < 24 * 60 * 60 * 1000 && (
+                    <Text style={s.reminderWarning}>
+                      ⚠️ ตั้งเวลาไม่ถึง 1 วัน การแจ้งเตือนล่วงหน้าจะไม่ทำงาน
+                    </Text>
+                  )}
 
                   {/* Save Button */}
                   <TouchableOpacity
@@ -889,8 +893,8 @@ const s = StyleSheet.create({
     marginTop: 6,
   },
 
-  // Reminder Info (Always Enabled)
-  reminderInfo: {
+  // Reminder Toggle (Disabled)
+  reminderToggle: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F1F5F9',
@@ -900,7 +904,7 @@ const s = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 14,
     marginTop: 16,
-    opacity: 0.7,
+    opacity: 0.6,
   },
   reminderIcon: {
     fontSize: 24,
@@ -909,15 +913,41 @@ const s = StyleSheet.create({
   reminderTextContainer: {
     flex: 1,
   },
-  reminderInfoText: {
+  reminderText: {
     fontSize: 15,
     fontWeight: '600',
     color: '#64748B',
   },
-  reminderInfoSubtext: {
+  reminderSubtext: {
     fontSize: 12,
     color: '#94A3B8',
     marginTop: 2,
+  },
+  toggleTrack: {
+    width: 44,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: '#CBD5E1',
+    justifyContent: 'center',
+    paddingHorizontal: 3,
+  },
+  toggleThumbActive: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: COLORS.white,
+    alignSelf: 'flex-end',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.15,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  reminderWarning: {
+    fontSize: 12,
+    color: '#F59E0B',
+    marginTop: 8,
+    marginLeft: 4,
   },
 
   // Save Button

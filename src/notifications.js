@@ -50,9 +50,10 @@ export async function requestNotificationPermissions() {
 
 export async function scheduleReminder(homeworkId, subject, dueDate) {
   const dueDateObj = new Date(dueDate);
-  const reminderDate = new Date(dueDateObj.getTime() - 1 * 60 * 1000); // 1 minute before
+  const reminderDate = new Date(dueDateObj.getTime() - 24 * 60 * 60 * 1000); // 1 day before
+  const secondsUntilReminder = Math.floor((reminderDate.getTime() - Date.now()) / 1000);
 
-  if (reminderDate <= new Date()) {
+  if (secondsUntilReminder <= 0) {
     console.log('Reminder date is in the past, skipping notification');
     return null;
   }
@@ -61,18 +62,18 @@ export async function scheduleReminder(homeworkId, subject, dueDate) {
     const identifier = await Notifications.scheduleNotificationAsync({
       content: {
         title: '📚 Smart Homework Reminder',
-        body: `วิชา "${subject}" ใกล้ถึงเวลาส่งแล้ว!`,
+        body: `วิชา "${subject}" ต้องส่งภายในพรุ่งนี้!`,
         data: { homeworkId },
         ...(Platform.OS === 'android' && { channelId: 'homework' }),
       },
       trigger: {
-        type: 'date',
-        date: reminderDate,
+        type: 'timeInterval',
+        seconds: secondsUntilReminder,
         channelId: 'homework',
       },
     });
 
-    console.log('Notification scheduled:', identifier, 'for', reminderDate.toLocaleString('th-TH'));
+    console.log('Notification scheduled:', identifier, 'in', secondsUntilReminder, 'seconds');
     return identifier;
   } catch (error) {
     console.error('Failed to schedule notification:', error);
